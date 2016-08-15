@@ -1,14 +1,13 @@
 /*
- * V1
+ * V4
  * Input as decimal
- * Computed using squared exponentiation
- * O((lg n) ^ 2) complexity
+ * Exponentation using power of 10 thing
+ * O(lg n) complexity
  * Usage:
  * exec <n> <input_file> <m>
  * Input number can contain max 10 ^ n digits
  * Input file contatins the number
  */
-
 #include <stdio.h>
 #include <math.h>
 #include <ctype.h>
@@ -23,9 +22,10 @@ long msb_index;
 long lsb_index;
 long m;
 
-int matrix_pow(int num[]);
-void matrix_multiply(int dest[][2], int source[][2]); // dest = dest x source
-void divide_by_2(int num[]);
+void matrix_pow(int mx[][2], int x);
+int f(int num[]);
+void matrix_multiply(int dest[][2], int source[][2]);
+void divide_by_10(int num[]);
 int is_non_zero(int num[]);
 
 
@@ -51,22 +51,41 @@ int main(int argc, char *argv[])
         lsb_index = limit - 1;
         while (inp[msb_index] == 0)
                 msb_index++;
-
-        printf("f(inp): %d\n", matrix_pow(inp));
+        printf("f(inp): %d\n", f(inp));
 }
 
 
-int matrix_pow(int num[])
+int f(int num[])
 {
         while (is_non_zero(num)) {
-                if (num[lsb_index] % 2 != 0) {
-                        matrix_multiply(Y, A); 
-                }
-                matrix_multiply(A, A);
-                divide_by_2(num);
+                int temp[2][2];
+                for (int i = 0; i < 2; ++i)
+                        for (int j = 0; j < 2; ++j)
+                                temp[i][j] = A[i][j];
+                matrix_pow(temp, num[lsb_index]);
+                matrix_multiply(Y, temp); 
+
+                matrix_pow(A, 10);
+                divide_by_10(num);
         }
         return Y[0][1];
 }
+
+void matrix_pow(int mx[][2], int x) // modifies mx to store mx ^ x
+{
+        int res[2][2] = { { 1, 0 }, { 0, 1 } };
+        while (x != 0) {
+                if (x % 2 != 0) {
+                        matrix_multiply(res, mx); 
+                }
+                matrix_multiply(mx, mx);
+                x = x / 2;
+        }
+        for (int i = 0; i < 2; ++i) 
+                for (int j = 0; j < 2; ++j) 
+                        mx[i][j] = res[i][j];
+}
+
 
 void matrix_multiply(int dest[][2], int source[][2])
 {
@@ -80,27 +99,14 @@ void matrix_multiply(int dest[][2], int source[][2])
                         dest[i][j] = temp[i][j] % m;
 }
 
-void divide_by_2(int num[]) 
+void divide_by_10(int num[]) 
 {
-        int cnumy = 0;
-        int d = 0;
-        for (int i = msb_index; i <= lsb_index; ++i) {
-                d = cnumy * 10 + num[i];
-                cnumy = d % 2;
-                num[i] = d / 2;
-        } 
-        while (msb_index <= lsb_index && (num[msb_index] == 0)) {
-                if (msb_index == lsb_index && num[lsb_index] == 0)
-                        return;
-                if (num[msb_index] == 0) 
-                        msb_index++;
-        }
+        lsb_index--;
 }
 
 int is_non_zero(int num[])
 {
         if (msb_index > lsb_index || num[msb_index] == 0)
                 return 0;
-        else 
-                return 1;
+        return 1;
 }
