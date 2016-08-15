@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-int f(int n, int mem[]);
+int precompute(long n, int mem[]);
 int big_mod(int num[], int len, int period);
 
 long m;
@@ -28,14 +28,11 @@ int main(int argc, char *argv[])
         while ((c = fgetc(fp)) != EOF && isdigit(c)) {
                 inp[len++] = c - '0';
         }
+        fclose(fp);
 
         int mem[6 * m + 1];
-        mem[0] = 0;
-        mem[1] = 1;
-        for (long i = 2; i <= 6 * m; ++i)
-                mem[i] = 0;
 
-        f(6 * m, mem);
+        precompute(6 * m, mem);
         long period = 0;
         for (long i = 2; i <= 6 * m; ++i)
                 if (mem[i] == 0 && mem[i+1] == 1) {
@@ -43,23 +40,19 @@ int main(int argc, char *argv[])
                         break;
                 }
 
-//        printf("Period:%ld\n", period);
         int p = big_mod(inp, len, period);
         printf("f(N): %d", mem[p]);
 
         return 0;
 }
 
-int f(int n, int mem[]) 
+int precompute(long n, int mem[]) 
 {
-        if (n <= 1)
-                return mem[n];
-        else if (mem[n] != 0) 
-                return mem[n];
-        else  {
-                mem[n] = (f(n-1, mem) + f(n-2, mem)) % m;
-                return mem[n];
-        }
+        mem[0] = 0;
+        mem[1] = 1;
+        for (long i = 2; i <= n; ++i)
+                mem[i] = (mem[i-1] + mem[i-2]) % m;
+        return mem[n];
 }
 
 int big_mod(int num[], int len, int period)
