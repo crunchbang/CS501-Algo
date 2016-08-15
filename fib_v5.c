@@ -15,11 +15,13 @@
 int f(int n, int mem[]);
 int big_mod(int num[], int len, int period);
 
+long m;
+
 int main(int argc, char *argv[])
 {
         long max = pow(10, atoi(argv[1]));
         FILE *fp = fopen(argv[2], "r");
-        int m = atoi(argv[3]);
+        m = atol(argv[3]);
         int inp[max];
         int c;
         int len = 0;
@@ -41,6 +43,7 @@ int main(int argc, char *argv[])
                         break;
                 }
 
+//        printf("Period:%ld\n", period);
         int p = big_mod(inp, len, period);
         printf("f(N): %d", mem[p]);
 
@@ -54,7 +57,7 @@ int f(int n, int mem[])
         else if (mem[n] != 0) 
                 return mem[n];
         else  {
-                mem[n] = (f(n-1, mem) + f(n-2, mem)) % 100;
+                mem[n] = (f(n-1, mem) + f(n-2, mem)) % m;
                 return mem[n];
         }
 }
