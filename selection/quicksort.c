@@ -2,7 +2,12 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-#define MAX 100
+/*
+ * Quicksort as described in CLRS
+ * Usage:
+ * <exec> <inp_file> <number_of_elements>
+ * Input file contains the numbers that is to be sorted
+ */
 
 void quicksort(int arr[], int start, int end);
 int partition(int arr[], int start, int end);
@@ -18,9 +23,8 @@ int main(int argc, char *argv[])
 
         quicksort(arr, 0, n-1);
 
-        printf("Sorted array:\n");
         for (int i = 0; i < n; ++i)
-                printf("%d ", arr[i]);
+                printf("%d\n", arr[i]);
 
         return 0;
 }

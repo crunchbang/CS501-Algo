@@ -2,12 +2,22 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <time.h>
 
 #define MAX_LEN_NUM 1000000
 #define MAX_LEN_RANGE 100
 
+/*
+ * Randomized select; uses hoare partition algorithm
+ * Usage:
+ * <exec> A.txt B.txt
+ * Output will be in out.txt
+ */
+
 int select(int arr[], int start, int end, int rank);
 int partition(int arr[], int start, int end);
+void swap(int arr[], int p1, int p2);
+int pivot(int arr[], int start, int end);
 
 int main(int argc, char *argv[])
 {
@@ -19,22 +29,17 @@ int main(int argc, char *argv[])
         int rank[MAX_LEN_RANGE];
         int i;
 
+        srand(time(NULL));
+
         for (i = 0; i < MAX_LEN_NUM; ++i)
                 fscanf(fp_num, "%d", &arr[i]);
         for (i = 0; i < MAX_LEN_RANGE; ++i)
                 fscanf(fp_rank, "%d", &rank[i]);
 
-//        printf("Size:%ld", sizeof(arr));
-
-
         for (i = 0; i < MAX_LEN_RANGE; ++i) 
         {
-                //make copy each time
-                int tmp[MAX_LEN_NUM];
-                memcpy(tmp, arr, sizeof(arr));
-                int ele = select(tmp, 0, MAX_LEN_NUM-1, rank[i]);
-                printf("%d\n", tmp[ele]);
-                fprintf(fp_out, "%d\n", tmp[ele]);
+                int ele = select(arr, 0, MAX_LEN_NUM-1, rank[i]);
+                fprintf(fp_out, "%d\n", arr[ele]);
         }
 
         return 0;
@@ -60,25 +65,34 @@ int partition(int arr[], int start, int end)
         if (start == end)
                 return start;
 
-        int i, j, r, t;
+        int i, j, pos;
         i = start - 1;
         j = start;
-        r = arr[end];
+        pos = pivot(arr, start, end);
+        swap(arr, pos, end);
         while (j < end) 
         {
-                if (arr[j] <= r) 
+                if (arr[j] <= arr[end]) 
                 {
                         i = i + 1;
-                        t = arr[i];
-                        arr[i] = arr[j];
-                        arr[j] = t;
+                        swap(arr, i, j);
                 }
                 j++;
         }
         i = i + 1;
-        t = arr[i];
-        arr[i] = arr[end];
-        arr[end] = t;
+        swap(arr, i, end);
         return i;
 }
 
+int pivot(int arr[], int start, int end)
+{
+        int p = start + rand() % (end - start + 1);
+        return p;
+}
+
+void swap(int arr[], int p1, int p2) 
+{
+        int t = arr[p1];
+        arr[p1] = arr[p2];
+        arr[p2] = t;
+}

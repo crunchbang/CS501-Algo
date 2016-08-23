@@ -7,6 +7,15 @@
 #define MAX_LEN_NUM 1000000
 #define MAX_LEN_RANGE 100
 
+/*
+ * Deterministic selection
+ * Usage:
+ * <exec> A.txt B.txt
+ * Output will be in out.txt
+ *
+ */
+
+
 int select(int arr[], int start, int end, int rank);
 int partition(int arr[], int start, int end);
 int pivot(int arr[], int start, int end);
@@ -33,13 +42,7 @@ int main(int argc, char *argv[])
 
         for (i = 0; i < MAX_LEN_RANGE; ++i) 
         {
-                /*
-                //make copy each time
-                int tmp[MAX_LEN_NUM];
-                memcpy(tmp, arr, sizeof(arr));
-                */
                 int ele = select(arr, 0, MAX_LEN_NUM-1, rank[i]);
-//                printf("%d\n", arr[ele]);
                 fprintf(fp_out, "%d\n", arr[ele]);
         }
 
@@ -68,7 +71,6 @@ int partition(int arr[], int start, int end)
         i = start - 1;
         j = start;
         pos = pivot(arr, start, end); 
-//        pos = end;
         swap(arr, pos, end);
         while (j < end) 
         {
