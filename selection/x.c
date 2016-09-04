@@ -41,6 +41,7 @@ int main(int argc, char *argv[])
         for (i = 0; i < MAX_LEN_RANGE; ++i) 
         {
                 int ele = select(arr, 0, MAX_LEN_NUM-1, rank[i]);
+                printf( "%d\n", arr[ele]);
                 fprintf(fp_out, "%d\n", arr[ele]);
         }
 
@@ -70,8 +71,9 @@ int partition(int arr[], int start, int end)
         int i, j, pos;
         i = start - 1;
         j = start;
-        pos = pivot(arr, start, end);
-        swap(arr, pos, end);
+//        pos = pivot(arr, start, end);
+//        swap(arr, pos, end);
+        pos = end;
         while (j < end) 
         {
                 if (arr[j] <= arr[end]) 
