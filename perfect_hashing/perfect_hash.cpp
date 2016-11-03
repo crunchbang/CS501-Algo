@@ -104,6 +104,7 @@ struct hash_table {
     {
         for (long long int i = 0; i < N; ++i) {
             sec.push_back(sec_hash_table(len[i]*len[i], slot[i]));
+            slot[i].clear();
         }
         cout << "Op complete" << endl;
     }
@@ -132,10 +133,13 @@ int main()
     ht.convert();
 
 
+    /*
+    * Modify as required
     long long int y;
     printf("Lookup:\n");
     cin >> y;
     printf("Pos: %lld %lld\n", y, ht.lookup(y));
+    */
 
     return 0;
 }
